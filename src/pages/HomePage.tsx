@@ -1,224 +1,272 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Hero } from "../components/Hero";
 import { VegBadge } from "../components/VegBadge";
-import { useOrder } from "../context/OrderContext";
 import { useData } from "../context/DataContext";
-import { ArrowRight, MessageCircle, Navigation, Plus } from "lucide-react";
+import { useOrder } from "../context/OrderContext";
+import {
+  ArrowRight,
+  Gift,
+  Clock,
+  MapPin,
+  Navigation,
+  MessageCircle,
+} from "lucide-react";
 
 export const HomePage: React.FC = () => {
-  const { addItem } = useOrder();
-  const { homepageContent, featuredItemIds, menuItems, cafeInfo } = useData();
+  const { cafeInfo, giftProducts, galleryItems } = useData();
+  const { openDrawer } = useOrder();
 
-  // Dynamically resolve featured items in their admin-configured order
-  const signatureItems = featuredItemIds
-    .map((id) => menuItems.find((i) => i.id === id))
-    .filter(Boolean);
+  // Curated gift items for Gifting Teaser
+  const teaserGifts = giftProducts.filter((p) => p.isFeatured).slice(0, 3);
 
-  const whatsappLink = `https://wa.me/${cafeInfo.whatsappNumber}?text=${encodeURIComponent(
-    `Hi ${cafeInfo.name}! 👋 I am visiting your website and would like to order.`
-  )}`;
+  // Curated photos for horizontal gallery strip
+  const previewGallery = galleryItems.slice(0, 5);
+
+  const categories = [
+    {
+      id: "signature-desserts",
+      title: "Signature Desserts",
+      subtitle: "Sweet cravings, always a good idea",
+      description: "Warm molten chocolate delights, Oreo dark crunches, and house specialties.",
+      image: "/dark-white-delight.jpg",
+      startingPrice: "₹49",
+      tag: "Iconic Bakes",
+      colSpan: "lg:col-span-8",
+      aspect: "aspect-16/10",
+    },
+    {
+      id: "beverages",
+      title: "Beverages",
+      subtitle: "Hot, cold, always a good idea",
+      description: "Kadak Assam tea, thick blended cold coffee, fruit shakes, and sparkling coolers.",
+      image: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=800&q=80",
+      startingPrice: "₹15",
+      tag: "Fresh Sips",
+      colSpan: "lg:col-span-4",
+      aspect: "aspect-4/3 lg:aspect-auto lg:h-full",
+    },
+    {
+      id: "sandwiches-maggie",
+      title: "Sandwiches & Maggie",
+      subtitle: "Comfort in every bite",
+      description: "Crispy grilled triple-cheese sandwiches and steaming hot masala noodles.",
+      image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=800&q=80",
+      startingPrice: "₹39",
+      tag: "Comfort Food",
+      colSpan: "lg:col-span-4",
+      aspect: "aspect-4/3",
+    },
+    {
+      id: "burgers-fries",
+      title: "Burgers & Fries",
+      subtitle: "Classic done right",
+      description: "Crispy vegetable patties, grilled paneer burgers, and shaker peri-peri fries.",
+      image: "https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=800&q=80",
+      startingPrice: "₹39",
+      tag: "Crunchy Bites",
+      colSpan: "lg:col-span-4",
+      aspect: "aspect-4/3",
+    },
+    {
+      id: "momo",
+      title: "Momos",
+      subtitle: "A bite of goodness",
+      description: "Steamed, crispy fried, kurkure crunch, and molten cheese momos with spicy dip.",
+      image: "/momos-platter.jpg",
+      startingPrice: "₹49",
+      tag: "Student Craving",
+      colSpan: "lg:col-span-4",
+      aspect: "aspect-4/3",
+    },
+    {
+      id: "quick-bites",
+      title: "Quick Bites",
+      subtitle: "Simple bites, big hapiness",
+      description: "Flaky golden bakery puff patties, garlic Korean buns, and stone-baked pizzas.",
+      image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80",
+      startingPrice: "₹20",
+      tag: "Daily Fresh",
+      colSpan: "lg:col-span-12",
+      aspect: "aspect-21/9 sm:aspect-16/7",
+    },
+  ];
 
   return (
-    <div className="bg-[#FAF7F2]">
+    <div className="bg-[#F8F5ED]">
       {/* ==================================================
-          1. HERO SECTION (Cafecito inspiration)
-          Large atmospheric photograph, minimal text, image does visual work
+          1. SHOWSTOPPER HERO SECTION
           ================================================== */}
-      <section className="relative min-h-[94vh] sm:min-h-screen flex items-center justify-center overflow-hidden bg-[#2FA4B8]">
-        {/* Full-width Indian cafe flat-lay photograph */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src={homepageContent.heroImage}
-            alt={`${homepageContent.heroTitle} cafe table flat-lay`}
-            className="w-full h-full object-cover object-center"
-            loading="eager"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = "/hero-indian-cafe.jpg";
-            }}
-          />
-
-          {/* Gentle center-focused radial vignette to keep the food vibrant & bright while ensuring center text readability */}
-          <div className="absolute inset-0 bg-radial from-black/45 via-black/20 to-transparent pointer-events-none" />
-          <div className="absolute inset-0 bg-black/15 pointer-events-none" />
-        </div>
-
-        {/* Hero Content — Centered, minimal, elegant right over the turquoise table */}
-        <div className="relative z-10 max-w-3xl mx-auto px-6 py-28 text-center text-white">
-          {/* Subtle Pure Veg pill */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/30 text-white mb-4 sm:mb-6 text-[11px] font-medium tracking-[0.22em] uppercase shadow-sm">
-            <VegBadge size="sm" />
-            <span>100% Pure Vegetarian</span>
-          </div>
-
-          {/* Brand Heading — Cafecito organic elegance */}
-          <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-normal tracking-[0.14em] uppercase leading-[1.05] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)] mb-2">
-            {homepageContent.heroTitle}
-          </h1>
-
-          {/* Subheading */}
-          <p className="font-sans text-xs sm:text-sm font-semibold tracking-[0.4em] uppercase text-[#FDE68A] drop-shadow-sm mb-4 sm:mb-6">
-            {homepageContent.heroSubtitle}
-          </p>
-
-          {/* Tagline */}
-          <p className="font-serif italic text-lg sm:text-2xl md:text-3xl font-light text-white/95 max-w-xl mx-auto mb-8 sm:mb-10 leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
-            &ldquo;{homepageContent.heroDescription}&rdquo;
-          </p>
-
-          {/* Cafecito-style pill outline buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-md mx-auto">
-            <Link
-              to="/menu"
-              className="w-full sm:w-auto px-7 py-3 bg-white/90 hover:bg-white text-[#1C241E] text-xs font-semibold uppercase tracking-[0.2em] rounded-full transition-all duration-300 shadow-md flex items-center justify-center gap-2 group cursor-pointer"
-            >
-              <span>View Menu</span>
-              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-            </Link>
-
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto px-7 py-3 bg-black/40 hover:bg-black/60 text-white border-2 border-white/80 hover:border-white text-xs font-semibold uppercase tracking-[0.2em] rounded-full backdrop-blur-xs transition-all duration-300 flex items-center justify-center gap-2 shadow-sm"
-            >
-              <MessageCircle className="w-4 h-4 text-[#FDE68A]" />
-              <span>Order Now</span>
-            </a>
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       {/* ==================================================
-          2. SMALL BRAND INTRO
-          "GOOD FOOD. GOOD MOOD."
-          Short 1–2 sentence introduction
+          A. SIGNATURE CRAVINGS
+          Asymmetrical editorial layouts linking to menu sections
           ================================================== */}
-      <section className="py-16 sm:py-24 border-b border-[#E8DFD3] bg-[#FCFAF7]">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <span className="text-[11px] sm:text-xs font-semibold tracking-[0.3em] uppercase text-[#755546] block mb-3">
-            Welcome to the neighbourhood
-          </span>
-          <h2 className="font-serif text-3xl sm:text-5xl font-normal text-[#1C241E] tracking-tight mb-5">
-            GOOD FOOD. GOOD MOOD.
-          </h2>
-          <div className="w-10 h-0.5 bg-[#C59F54] mx-auto mb-6" />
-          <p className="text-base sm:text-lg text-[#575E5B] font-light leading-relaxed">
-            A cozy corner for warm oven bakes, chocolate cravings, and conversations that linger long after the last sip. Everything here is 100% vegetarian, prepared fresh to order, and made to feel comfortingly familiar.
-          </p>
-        </div>
-      </section>
-
-      {/* ==================================================
-          3. SIGNATURES
-          Dynamic featured items selected from Admin Panel
-          ================================================== */}
-      <section className="py-20 sm:py-28 bg-[#FAF7F2]">
+      <section id="signature-cravings" className="py-20 sm:py-28 bg-[#F8F5ED] scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 sm:mb-16 gap-4">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-4">
             <div>
-              <span className="text-[11px] sm:text-xs font-semibold tracking-[0.28em] uppercase text-[#755546] block mb-2">
-                House Signatures
+              <span className="text-[11px] sm:text-xs font-semibold tracking-[0.3em] uppercase text-[#078F96] block mb-2">
+                Curated Flavours
               </span>
-              <h2 className="font-serif text-3xl sm:text-5xl font-normal text-[#1C241E] tracking-tight">
-                A few things we&apos;re loved for.
+              <h2 className="font-display text-3xl sm:text-5xl font-normal text-[#064F50] tracking-tight">
+                SIGNATURE CRAVINGS
               </h2>
+              <p className="text-xs sm:text-sm text-[#594235]/80 font-light mt-2 max-w-xl">
+                Freshly prepared comfort food made with honest ingredients. 100% pure vegetarian, baked fresh every single morning.
+              </p>
             </div>
 
             <Link
               to="/menu"
-              className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold tracking-[0.18em] uppercase text-[#1C241E] hover:text-[#755546] transition-colors group"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase text-[#064F50] hover:text-[#078F96] transition-colors group shrink-0"
             >
-              <span>Explore The Menu</span>
+              <span>VIEW FULL MENU</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
 
-          {/* Dynamic Signature Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {signatureItems.map((item) => {
-              if (!item) return null;
-              const isAvailable = item.isAvailable !== false;
-
-              return (
-                <div
-                  key={item.id}
-                  className="group bg-[#FCFAF7] rounded-xl overflow-hidden border border-[#E8DFD3] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-black/5 flex flex-col justify-between"
+          {/* Asymmetrical Editorial Image Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8">
+            {categories.map((cat) => (
+              <div
+                key={cat.id}
+                className={`${cat.colSpan} group relative rounded-2xl overflow-hidden bg-white border border-[#E8DFD3] shadow-xs hover:shadow-xl transition-all duration-500 hover:-translate-y-1 flex flex-col justify-between`}
+              >
+                {/* Image Container with Editorial Zoom */}
+                <Link
+                  to={`/menu?category=${cat.id}`}
+                  className={`relative w-full ${cat.aspect} overflow-hidden bg-[#EFE9DE] block`}
                 >
-                  {/* Large Editorial Photography */}
-                  <div>
-                    <div className="relative aspect-4/3 sm:aspect-square w-full overflow-hidden bg-[#EFE9DE]">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className={`w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-106 ${
-                          !isAvailable ? "grayscale contrast-75 opacity-75" : ""
-                        }`}
-                        loading="lazy"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = "/dark-white-delight.jpg";
-                        }}
-                      />
-                      <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs p-1.5 rounded-md shadow-2xs">
-                        <VegBadge size="sm" />
-                      </div>
+                  <img
+                    src={cat.image}
+                    alt={cat.title}
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-106"
+                    loading="lazy"
+                  />
+                  {/* Subtle Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
 
-                      {/* Availability badge or Price chip */}
-                      {!isAvailable ? (
-                        <div className="absolute top-3 right-3 bg-rose-600 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full shadow-2xs">
-                          Sold Out
-                        </div>
-                      ) : (
-                        <div className="absolute bottom-3 right-3 bg-[#FAF7F2]/95 backdrop-blur-xs px-2.5 py-1 rounded-full text-xs font-bold text-[#1C241E] shadow-2xs">
-                          {item.priceDisplay || `₹${item.price}`}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Details */}
-                    <div className="p-5">
-                      <h3 className="font-serif text-xl font-semibold text-[#1C241E] leading-snug group-hover:text-[#26332A] transition-colors">
-                        {item.name}
-                      </h3>
-                      <p className="text-xs text-[#767E7A] mt-1 line-clamp-2 font-light">
-                        {item.description}
-                      </p>
-                    </div>
+                  {/* Top Badges */}
+                  <div className="absolute top-3.5 left-3.5 flex items-center gap-2">
+                    <span className="bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-[#064F50] shadow-xs">
+                      {cat.tag}
+                    </span>
+                    <VegBadge size="sm" />
                   </div>
 
-                  {/* Footer / Action */}
-                  <div className="p-5 pt-0">
-                    <div className="pt-3 border-t border-[#EFE9DE] flex items-center justify-between">
-                      <span className="text-sm font-serif font-bold text-[#1C241E]">
-                        {item.priceDisplay || `₹${item.price}`}
-                      </span>
-
-                      {isAvailable ? (
-                        <button
-                          onClick={() => addItem(item)}
-                          className="inline-flex items-center gap-1 px-3 py-1 bg-[#EFE9DE] hover:bg-[#26332A] text-[#26332A] hover:text-white rounded-full text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer"
-                        >
-                          <Plus className="w-3.5 h-3.5" />
-                          <span>Add</span>
-                        </button>
-                      ) : (
-                        <span className="text-[11px] text-rose-600 font-medium">
-                          Currently unavailable
-                        </span>
-                      )}
-                    </div>
+                  <div className="absolute top-3.5 right-3.5 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-medium text-white/95 border border-white/20">
+                    From {cat.startingPrice}
                   </div>
+
+                  {/* Bottom Text in Image for Wide Cards */}
+                  <div className="absolute bottom-4 left-4 right-4 text-white">
+                    <span className="text-[10px] uppercase tracking-[0.22em] text-[#E8C45A] font-semibold block mb-1">
+                      {cat.subtitle}
+                    </span>
+                    <h3 className="font-display text-xl sm:text-2xl font-bold tracking-wide">
+                      {cat.title}
+                    </h3>
+                  </div>
+                </Link>
+
+                {/* Card Bottom Strip */}
+                <div className="p-4 sm:p-5 flex items-center justify-between bg-white border-t border-[#F2ECE1]">
+                  <p className="text-xs text-[#594235]/85 line-clamp-1 font-light pr-3">
+                    {cat.description}
+                  </p>
+                  <Link
+                    to={`/menu?category=${cat.id}`}
+                    className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-[#078F96] group-hover:text-[#064F50] shrink-0"
+                  >
+                    <span>Explore</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                  </Link>
                 </div>
-              );
-            })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==================================================
+          B. A LITTLE SOMETHING TO GIFT
+          Dedicated gifting section inspired by FNP with TCC palette
+          ================================================== */}
+      <section className="py-20 sm:py-28 bg-[#FCFAF7] border-y border-[#E8DFD3]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mb-12 sm:mb-16">
+            <span className="text-[11px] sm:text-xs font-semibold tracking-[0.28em] uppercase text-[#078F96] block mb-2 flex items-center gap-2">
+              <Gift className="w-3.5 h-3.5 text-[#078F96]" />
+              <span>Gifting by The Classic Crush</span>
+            </span>
+            <h2 className="font-display text-3xl sm:text-5xl font-normal text-[#064F50] tracking-tight leading-tight">
+              Make someone&apos;s day a little sweeter.
+            </h2>
+            <p className="text-sm sm:text-base text-[#594235]/80 font-light mt-3 leading-relaxed">
+              Thoughtfully arranged bouquets, artisanal chocolates, warm bakery boxes, and personal handwritten notes for birthdays, anniversaries, or just because.
+            </p>
           </div>
 
-          {/* Button leading to /menu */}
-          <div className="text-center mt-12 sm:mt-16">
+          {/* 3 Curated Gifting Products */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12">
+            {teaserGifts.map((gift) => (
+              <div
+                key={gift.id}
+                className="group bg-white rounded-2xl overflow-hidden border border-[#E8DFD3] shadow-xs hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
+              >
+                <div>
+                  <div className="relative aspect-4/3 w-full overflow-hidden bg-[#EFE9DE]">
+                    <img
+                      src={gift.image}
+                      alt={gift.name}
+                      className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
+                      loading="lazy"
+                    />
+                    {gift.occasions[0] && (
+                      <span className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase text-[#064F50] shadow-xs">
+                        {gift.occasions[0]}
+                      </span>
+                    )}
+                    <span className="absolute bottom-3 right-3 bg-[#064F50]/90 text-white backdrop-blur-xs px-3 py-1 rounded-full text-xs font-bold shadow-xs">
+                      {gift.priceDisplay || `₹${gift.price}`}
+                    </span>
+                  </div>
+
+                  <div className="p-5 sm:p-6 space-y-2">
+                    <h3 className="font-display text-lg font-bold text-[#064F50] group-hover:text-[#078F96] transition-colors">
+                      {gift.name}
+                    </h3>
+                    <p className="text-xs text-[#594235]/80 font-light line-clamp-2 leading-relaxed">
+                      {gift.description}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-5 sm:p-6 pt-0 border-t border-[#F2ECE1] mt-2 flex items-center justify-between">
+                  <span className="text-[11px] text-[#078F96] font-medium">
+                    Same-day cafe pickup available
+                  </span>
+                  <Link
+                    to={`/gifting/${gift.slug}`}
+                    className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-[#064F50] group-hover:text-[#078F96]"
+                  >
+                    <span>View Gift</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Action CTA */}
+          <div className="text-center pt-2">
             <Link
-              to="/menu"
-              className="inline-flex items-center gap-3 px-8 py-3.5 bg-[#26332A] text-[#FAF7F2] hover:bg-[#1C241E] text-xs font-semibold uppercase tracking-[0.2em] rounded-full transition-all duration-300 shadow-xs group"
+              to="/gifting"
+              className="inline-flex items-center gap-3 px-8 py-3.5 bg-[#078F96] hover:bg-[#067B82] text-white text-xs font-semibold uppercase tracking-[0.2em] rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 group"
             >
-              <span>Explore The Menu</span>
+              <span>EXPLORE GIFTING</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
@@ -226,52 +274,56 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* ==================================================
-          4. SMALL CAFE IMAGE / STORY TEASER
-          One beautiful image + tiny introduction
-          "Made for good food & good company."
-          Button: OUR STORY →
+          C. OUR LITTLE CORNER
+          Introduction with beautiful café photograph and link to OUR STORY
           ================================================== */}
-      <section className="py-20 sm:py-28 bg-[#F7F3EC] border-y border-[#E8DFD3]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-14 items-center">
-            {/* One Large Cafe Editorial Image */}
-            <div className="md:col-span-6">
-              <div className="relative rounded-2xl overflow-hidden shadow-lg border border-[#E8DFD3] bg-[#EFE9DE]">
+      <section className="py-20 sm:py-28 bg-[#F8F5ED]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            {/* Café Editorial Image */}
+            <div className="lg:col-span-6">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-[#E8DFD3] bg-[#EFE9DE]">
                 <img
-                  src={homepageContent.storyImage}
-                  alt="Cozy ambient corner at The Classic Crush Cafe"
-                  className="w-full h-[340px] sm:h-[420px] object-cover object-center"
+                  src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1400&q=80"
+                  alt="Cozy sunlit table corner at The Classic Crush Bakery & Cafe"
+                  className="w-full h-[380px] sm:h-[460px] object-cover object-center"
                   loading="lazy"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src =
-                      "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1400&q=80";
-                  }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-xs px-3 py-1.5 rounded-lg text-[11px] font-medium text-[#26332A] flex items-center gap-2">
-                  <VegBadge size="sm" />
-                  <span>Strictly 100% Pure Vegetarian</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between text-white">
+                  <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 text-xs">
+                    <VegBadge size="sm" />
+                    <span>100% Pure Vegetarian</span>
+                  </div>
+                  <span className="text-[11px] text-[#E8C45A] font-semibold tracking-wider uppercase">
+                    Daily Fresh Ovens
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Tiny Introduction & CTA */}
-            <div className="md:col-span-6 space-y-5">
-              <span className="text-[11px] sm:text-xs font-semibold tracking-[0.28em] uppercase text-[#755546] block">
-                The Story Behind
+            {/* Introduction Copy & Link */}
+            <div className="lg:col-span-6 space-y-6">
+              <span className="text-[11px] sm:text-xs font-semibold tracking-[0.3em] uppercase text-[#078F96] block">
+                Our Little Corner
               </span>
-              <h2 className="font-serif text-3xl sm:text-5xl font-normal text-[#1C241E] leading-tight">
-                {homepageContent.storyHeading}
+              <h2 className="font-display text-3xl sm:text-5xl font-normal text-[#064F50] leading-tight">
+                Freshly made. Comfortingly familiar.
               </h2>
-              <p className="text-sm sm:text-base text-[#575E5B] font-light leading-relaxed">
-                {homepageContent.storyDescription}
+              <div className="w-12 h-0.5 bg-[#E8C45A]" />
+              <p className="text-sm sm:text-base text-[#594235]/90 font-light leading-relaxed">
+                The Classic Crush was created for anyone who loves the aroma of freshly baked patties in the morning, thick frothy cold coffee between study sessions, and rich molten chocolate shared with friends.
               </p>
+              <p className="text-sm sm:text-base text-[#594235]/90 font-light leading-relaxed">
+                Everything we serve is strictly 100% vegetarian, prepared fresh to order, and crafted with genuine care. No pretentious dining rules, no overcomplicated menus — just delicious café comfort that feels like home.
+              </p>
+
               <div className="pt-2">
                 <Link
                   to="/our-story"
-                  className="inline-flex items-center gap-2.5 text-xs sm:text-sm font-semibold tracking-[0.18em] uppercase text-[#1C241E] border-b-2 border-[#1C241E] pb-1 hover:text-[#755546] hover:border-[#755546] transition-colors group"
+                  className="inline-flex items-center gap-2.5 text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase text-[#064F50] border-b-2 border-[#064F50] pb-1 hover:text-[#078F96] hover:border-[#078F96] transition-colors group"
                 >
-                  <span>Our Story</span>
+                  <span>OUR STORY</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
@@ -281,40 +333,166 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* ==================================================
-          5. SMALL FINAL CTA
-          "COME GRAB A BITE."
-          ORDER NOW / GET DIRECTIONS
+          D. A GLIMPSE INSIDE
+          Curated horizontal gallery strip with authentic photographs
           ================================================== */}
-      <section className="py-20 sm:py-24 bg-[#FAF7F2] text-center">
-        <div className="max-w-2xl mx-auto px-6">
-          <span className="text-[11px] sm:text-xs font-semibold tracking-[0.3em] uppercase text-[#755546] block mb-2">
-            Always Ready For You
-          </span>
-          <h2 className="font-serif text-3xl sm:text-5xl font-normal text-[#1C241E] tracking-tight mb-4">
-            COME GRAB A BITE.
-          </h2>
-          <p className="text-sm sm:text-base text-[#575E5B] font-light mb-8 max-w-md mx-auto leading-relaxed">
-            Open daily: {cafeInfo.timings.hours}. Drop by for a quick parcel, a quiet table, or message us directly on WhatsApp.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xs sm:max-w-md mx-auto">
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto px-7 py-3 bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-semibold uppercase tracking-[0.18em] rounded-full transition-all duration-300 shadow-xs flex items-center justify-center gap-2"
-            >
-              <MessageCircle className="w-4 h-4 fill-white" />
-              <span>Order Now</span>
-            </a>
+      <section className="py-20 sm:py-24 bg-[#FCFAF7] border-t border-[#E8DFD3]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 sm:mb-14 gap-4">
+            <div>
+              <span className="text-[11px] sm:text-xs font-semibold tracking-[0.3em] uppercase text-[#078F96] block mb-2">
+                Visual Diary
+              </span>
+              <h2 className="font-display text-3xl sm:text-5xl font-normal text-[#064F50] tracking-tight">
+                A GLIMPSE INSIDE
+              </h2>
+              <p className="text-xs sm:text-sm text-[#594235]/80 font-light mt-1 max-w-md">
+                A preview of daily bakes, cool sips, warm tables, and handcrafted bouquets.
+              </p>
+            </div>
 
             <Link
-              to="/visit-us"
-              className="w-full sm:w-auto px-7 py-3 bg-[#FAF7F2] hover:bg-[#EFE9DE] text-[#1C241E] border border-[#D5C7B5] text-xs font-semibold uppercase tracking-[0.18em] rounded-full transition-all duration-300 flex items-center justify-center gap-2"
+              to="/gallery"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase text-[#064F50] hover:text-[#078F96] transition-colors group shrink-0"
             >
-              <Navigation className="w-3.5 h-3.5 text-[#755546]" />
-              <span>Get Directions</span>
+              <span>VIEW THE GALLERY</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
+          </div>
+
+          {/* Horizontal Gallery Strip */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5 mb-10">
+            {previewGallery.map((item, idx) => (
+              <Link
+                key={item.id || idx}
+                to="/gallery"
+                className="group relative rounded-xl overflow-hidden aspect-4/5 bg-[#EFE9DE] border border-[#E8DFD3] shadow-2xs hover:shadow-lg transition-all duration-500"
+              >
+                <img
+                  src={item.url}
+                  alt={item.caption}
+                  className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3.5 text-white">
+                  <span className="text-[9px] uppercase tracking-wider text-[#E8C45A] font-semibold">
+                    {item.category}
+                  </span>
+                  <p className="text-xs font-serif line-clamp-1">{item.caption}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link
+              to="/gallery"
+              className="inline-flex items-center gap-2 px-7 py-3 border border-[#064F50] text-[#064F50] hover:bg-[#064F50] hover:text-[#F8F5ED] text-xs font-semibold uppercase tracking-[0.2em] rounded-full transition-all duration-300 shadow-2xs"
+            >
+              <span>VIEW THE GALLERY</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ==================================================
+          E. COME BY, STAY AWHILE
+          Compact visit-us section with address, hours, map embed, and directions
+          ================================================== */}
+      <section className="py-20 sm:py-28 bg-[#F8F5ED] border-t border-[#E8DFD3]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+            {/* Left Info Column */}
+            <div className="lg:col-span-5 space-y-6">
+              <div>
+                <span className="text-[11px] sm:text-xs font-semibold tracking-[0.3em] uppercase text-[#078F96] block mb-2">
+                  Find Our Cafe
+                </span>
+                <h2 className="font-display text-3xl sm:text-5xl font-normal text-[#064F50] tracking-tight">
+                  COME BY, STAY AWHILE
+                </h2>
+                <div className="w-12 h-0.5 bg-[#E8C45A] mt-3 mb-4" />
+                <p className="text-sm text-[#594235]/85 font-light leading-relaxed">
+                  We look forward to hosting you. Drop in for morning chai and patties, an afternoon cold brew, or late-night dessert cravings.
+                </p>
+              </div>
+
+              {/* Address card */}
+              <div className="bg-white rounded-2xl p-5 border border-[#E8DFD3] shadow-xs space-y-3">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-9 h-9 rounded-full bg-[#EFE9DE] flex items-center justify-center shrink-0 text-[#064F50]">
+                    <MapPin className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-sm font-bold text-[#064F50]">
+                      Location &amp; Address
+                    </h3>
+                    <p className="text-xs text-[#594235] mt-0.5 leading-relaxed">
+                      {cafeInfo.address.street}, {cafeInfo.address.area}
+                    </p>
+                    <p className="text-xs font-medium text-[#078F96]">
+                      {cafeInfo.address.city}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3.5 pt-3 border-t border-[#F2ECE1]">
+                  <div className="w-9 h-9 rounded-full bg-[#EFE9DE] flex items-center justify-center shrink-0 text-[#064F50]">
+                    <Clock className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-sm font-bold text-[#064F50]">
+                      Opening Hours
+                    </h3>
+                    <p className="text-xs text-[#594235] mt-0.5">
+                      {cafeInfo.timings.days}
+                    </p>
+                    <p className="text-xs font-semibold text-[#064F50]">
+                      {cafeInfo.timings.hours}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-center gap-3.5 pt-2">
+                <a
+                  href={cafeInfo.googleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto px-7 py-3 bg-[#064F50] hover:bg-[#043839] text-[#F8F5ED] text-xs font-semibold uppercase tracking-[0.2em] rounded-full transition-all duration-300 shadow-md flex items-center justify-center gap-2"
+                >
+                  <Navigation className="w-3.5 h-3.5 text-[#E8C45A]" />
+                  <span>GET DIRECTIONS</span>
+                </a>
+
+                <button
+                  onClick={openDrawer}
+                  className="w-full sm:w-auto px-7 py-3 bg-white hover:bg-[#EFE9DE] text-[#064F50] border border-[#064F50] text-xs font-semibold uppercase tracking-[0.2em] rounded-full transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <MessageCircle className="w-3.5 h-3.5 text-[#078F96]" />
+                  <span>ORDER ONLINE</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Right Map Embed Column */}
+            <div className="lg:col-span-7">
+              <div className="rounded-2xl overflow-hidden shadow-xl border border-[#E8DFD3] bg-white h-[380px] sm:h-[440px] relative">
+                <iframe
+                  title="The Classic Crush Cafe Location Map"
+                  src={cafeInfo.googleMapsEmbedUrl}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-full grayscale-[0.2] contrast-[1.05]"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>

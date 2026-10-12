@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { VegBadge } from "../../components/VegBadge";
 import { Lock, Mail, ArrowLeft, AlertCircle } from "lucide-react";
@@ -11,19 +11,24 @@ export const AdminLoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/admin/dashboard";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // If already authenticated, immediately redirect to dashboard
+  if (isAuthenticated) {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      const res = login(email, password);
+    try {
+      const res = await login(email, password, rememberMe);
       setIsSubmitting(false);
 
       if (res.success) {
@@ -31,7 +36,10 @@ export const AdminLoginPage: React.FC = () => {
       } else {
         setError(res.error || "Authentication failed.");
       }
-    }, 400);
+    } catch {
+      setIsSubmitting(false);
+      setError("An unexpected error occurred during authentication.");
+    }
   };
 
   const fillDemo = () => {
@@ -57,6 +65,11 @@ export const AdminLoginPage: React.FC = () => {
       <div className="w-full max-w-sm bg-white rounded-2xl border border-[#E5DFD5] shadow-sm p-7 sm:p-8">
         {/* Brand Header */}
         <div className="text-center mb-8">
+          <img
+            src="/tcc-logo.png"
+            alt="The Classic Crush"
+            className="h-12 w-auto mx-auto mb-3 object-contain"
+          />
           <div className="flex items-center justify-center gap-2 mb-2">
             <span className="font-serif text-2xl font-bold tracking-[0.16em] uppercase text-[#1C241E]">
               THE CLASSIC CRUSH

@@ -2,32 +2,32 @@
 
 @theme {
   --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-display: "Cinzel", "Cormorant Garamond", Georgia, serif;
   --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  --color-cream-50: #FCFAF7;
-  --color-cream-100: #F7F3EC;
-  --color-cream-200: #EFE9DE;
-  --color-cream-300: #E5DBCA;
-  
-  --color-olive-950: #141A15;
-  --color-olive-900: #1C241E;
-  --color-olive-800: #26332A;
-  --color-olive-700: #344439;
-  --color-olive-600: #44594A;
-  
-  --color-brown-950: #1F1511;
-  --color-brown-900: #291D17;
-  --color-brown-800: #3C2A22;
-  --color-brown-700: #51392E;
-  
-  --color-gold-400: #D8B774;
-  --color-gold-500: #C59F54;
+  --color-turquoise-500: #078F96;
+  --color-turquoise-600: #067B82;
+  --color-turquoise-700: #05666C;
+  --color-turquoise-100: #E6F4F5;
 
-  --color-charcoal-900: #191B1A;
-  --color-charcoal-800: #262A28;
-  --color-charcoal-700: #3B403E;
-  --color-charcoal-600: #575E5B;
-  --color-charcoal-500: #747C78;
+  --color-teal-800: #064F50;
+  --color-teal-900: #043839;
+
+  --color-cream-50: #FCFAF7;
+  --color-cream-100: #F8F5ED;
+  --color-cream-200: #EFE9DE;
+  --color-cream-300: #D8C7AC;
+
+  --color-sand-300: #D8C7AC;
+  --color-sand-400: #C7B393;
+
+  --color-espresso-700: #594235;
+  --color-espresso-800: #3C2D24;
+  --color-espresso-900: #2C201A;
+
+  --color-gold-400: #F0D275;
+  --color-gold-500: #E8C45A;
+  --color-gold-600: #D4AF37;
 }
 
 html {
@@ -36,13 +36,17 @@ html {
 
 body {
   font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: #FAF7F2;
-  color: #262A28;
+  background-color: #F8F5ED;
+  color: #2C201A;
   overflow-x: hidden;
 }
 
 h1, h2, h3, .font-serif {
   font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+.font-display {
+  font-family: "Cinzel", "Cormorant Garamond", Georgia, serif;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -53,4 +57,44 @@ h1, h2, h3, .font-serif {
 .no-scrollbar {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+/* Subtle Editorial Animations */
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-hero-fade {
+  animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-hero-scale {
+  animation: heroScaleIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-fade,
+  .animate-hero-scale {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

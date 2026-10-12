@@ -16,6 +16,7 @@ import {
   Menu as MenuIcon,
   X,
   Calendar,
+  Gift,
 } from "lucide-react";
 
 interface AdminLayoutProps {
@@ -49,6 +50,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   const navItems = [
     { name: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
     { name: "Menu Items", path: "/admin/menu", icon: UtensilsCrossed },
+    { name: "Gifting", path: "/admin/gifting", icon: Gift },
     { name: "Orders", path: "/admin/orders", icon: ShoppingBag, badge: pendingOrdersCount },
     { name: "Featured", path: "/admin/featured", icon: Star },
     { name: "Gallery", path: "/admin/gallery", icon: Images },
@@ -109,11 +111,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         <div className="p-6 border-b border-[#EFE9DE]">
           <div className="flex items-center justify-between">
             <div>
-              <span className="font-serif text-lg font-bold tracking-[0.14em] uppercase text-[#1C241E] block">
+              <span className="font-display text-base font-bold tracking-[0.14em] uppercase text-[#064F50] block">
                 THE CLASSIC CRUSH
               </span>
               <div className="flex items-center gap-2 mt-0.5">
-                <span className="text-[10px] uppercase tracking-[0.24em] font-semibold text-[#C59F54]">
+                <span className="text-[10px] uppercase tracking-[0.24em] font-semibold text-[#078F96]">
                   ADMIN PORTAL
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
@@ -143,19 +145,19 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                 onClick={() => setMobileSidebarOpen(false)}
                 className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium tracking-wide transition-all ${
                   isActive
-                    ? "bg-[#26332A] text-[#FAF7F2] shadow-2xs font-semibold"
-                    : "text-[#575E5B] hover:text-[#1C241E] hover:bg-[#EFE9DE]"
+                    ? "bg-[#064F50] text-[#F8F5ED] shadow-xs font-semibold"
+                    : "text-[#594235] hover:text-[#064F50] hover:bg-[#EFE9DE]"
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className={`w-4 h-4 ${isActive ? "text-[#D8B774]" : "text-[#755546]"}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? "text-[#E8C45A]" : "text-[#078F96]"}`} />
                   <span>{item.name}</span>
                 </div>
 
                 {typeof item.badge === "number" && item.badge > 0 && (
                   <span
                     className={`px-2 py-0.5 text-[10px] font-bold rounded-full ${
-                      isActive ? "bg-[#D8B774] text-[#1C241E]" : "bg-amber-100 text-amber-800"
+                      isActive ? "bg-[#E8C45A] text-[#064F50]" : "bg-emerald-100 text-emerald-800"
                     }`}
                   >
                     {item.badge}

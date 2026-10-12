@@ -1,5 +1,6 @@
 import React from "react";
 import { useData } from "../context/DataContext";
+import { VegBadge } from "../components/VegBadge";
 import { MapPin, Clock, Phone, Navigation, MessageCircle, ExternalLink } from "lucide-react";
 
 export const VisitUsPage: React.FC = () => {
@@ -7,51 +8,52 @@ export const VisitUsPage: React.FC = () => {
 
   const callLink = `tel:${cafeInfo.phone}`;
   const whatsappLink = `https://wa.me/${cafeInfo.whatsappNumber}?text=${encodeURIComponent(
-    `Hi ${cafeInfo.name}! I am visiting your cafe website and have a query.`
+    `Hi ${cafeInfo.name}! 👋 I am visiting your cafe website and would like to ask a question.`
   )}`;
 
   return (
-    <div className="pt-24 sm:pt-28 pb-24 bg-[#FAF7F2] min-h-screen">
+    <div className="pt-24 sm:pt-28 pb-24 bg-[#F8F5ED] min-h-screen">
       {/* Editorial Header */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 text-center mb-12 sm:mb-16">
-        <span className="text-[11px] sm:text-xs font-semibold tracking-[0.3em] uppercase text-[#755546] block mb-2">
-          Location &amp; Timings
-        </span>
-        <h1 className="font-serif text-4xl sm:text-6xl font-normal text-[#1C241E] tracking-tight mb-3">
-          COME FIND US.
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#064F50]/10 text-[#064F50] text-xs font-semibold uppercase tracking-[0.25em] mb-4">
+          <VegBadge size="sm" />
+          <span>NEIGHBOURHOOD VEGETARIAN CAFÉ</span>
+        </div>
+        <h1 className="font-display text-4xl sm:text-6xl font-normal text-[#064F50] tracking-tight mb-3">
+          VISIT US
         </h1>
-        <div className="w-12 h-0.5 bg-[#C59F54] mx-auto mb-4" />
-        <p className="font-serif italic text-lg sm:text-2xl text-[#59605C] max-w-lg mx-auto leading-relaxed">
+        <div className="w-12 h-0.5 bg-[#E8C45A] mx-auto mb-4" />
+        <p className="font-serif italic text-lg sm:text-2xl text-[#594235] max-w-lg mx-auto leading-relaxed">
           &ldquo;Step into a warm seat, order your favourite bite, and stay awhile.&rdquo;
         </p>
       </section>
 
       {/* Main Content Grid */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
           {/* Left Column: Cafe Details & Quick Contact */}
           <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
             {/* Address Box */}
             <div className="bg-white rounded-2xl p-6 sm:p-7 border border-[#E8DFD3] shadow-xs">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#EFE9DE] flex items-center justify-center shrink-0 text-[#26332A]">
+                <div className="w-10 h-10 rounded-full bg-[#078F96]/10 flex items-center justify-center shrink-0 text-[#078F96]">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
-                  <h2 className="font-serif text-lg font-bold text-[#1C241E]">
+                  <h2 className="font-display text-lg font-bold text-[#064F50]">
                     Our Address
                   </h2>
-                  <p className="text-sm text-[#3E4340] leading-relaxed font-light">
+                  <p className="text-sm text-[#594235] leading-relaxed font-light">
                     {cafeInfo.address.street}
                   </p>
-                  <p className="text-sm text-[#3E4340] font-light">
+                  <p className="text-sm text-[#594235] font-light">
                     {cafeInfo.address.area}
                   </p>
-                  <p className="text-sm font-medium text-[#755546]">
+                  <p className="text-sm font-semibold text-[#078F96]">
                     {cafeInfo.address.city}
                   </p>
                   {cafeInfo.address.landmark && (
-                    <p className="text-xs text-[#767E7A] italic pt-1">
+                    <p className="text-xs text-[#594235]/70 italic pt-1">
                       Landmark: {cafeInfo.address.landmark}
                     </p>
                   )}
@@ -62,21 +64,21 @@ export const VisitUsPage: React.FC = () => {
             {/* Opening Hours Box */}
             <div className="bg-white rounded-2xl p-6 sm:p-7 border border-[#E8DFD3] shadow-xs">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#EFE9DE] flex items-center justify-center shrink-0 text-[#26332A]">
+                <div className="w-10 h-10 rounded-full bg-[#078F96]/10 flex items-center justify-center shrink-0 text-[#078F96]">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
-                  <h2 className="font-serif text-lg font-bold text-[#1C241E]">
+                  <h2 className="font-display text-lg font-bold text-[#064F50]">
                     Opening Hours
                   </h2>
-                  <p className="text-sm font-semibold text-[#26332A]">
+                  <p className="text-sm font-semibold text-[#064F50]">
                     {cafeInfo.timings.days}
                   </p>
-                  <p className="text-sm text-[#3E4340] font-light">
+                  <p className="text-sm text-[#594235] font-light">
                     {cafeInfo.timings.hours}
                   </p>
                   {cafeInfo.timings.kitchenCloses && (
-                    <p className="text-xs text-[#755546] italic pt-1">
+                    <p className="text-xs text-[#078F96] italic pt-1">
                       {cafeInfo.timings.kitchenCloses}
                     </p>
                   )}
@@ -87,70 +89,88 @@ export const VisitUsPage: React.FC = () => {
             {/* Contact & Phone */}
             <div className="bg-white rounded-2xl p-6 sm:p-7 border border-[#E8DFD3] shadow-xs">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#EFE9DE] flex items-center justify-center shrink-0 text-[#26332A]">
+                <div className="w-10 h-10 rounded-full bg-[#078F96]/10 flex items-center justify-center shrink-0 text-[#078F96]">
                   <Phone className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
-                  <h2 className="font-serif text-lg font-bold text-[#1C241E]">
-                    Phone &amp; Enquiries
+                  <h2 className="font-display text-lg font-bold text-[#064F50]">
+                    Contact &amp; Enquiries
                   </h2>
-                  <p className="text-xs text-[#575E5B] font-light">
+                  <p className="text-xs text-[#594235]/80 font-light">
                     For takeout parcel status or group table seating:
                   </p>
-                  <a
-                    href={callLink}
-                    className="inline-block text-base font-bold text-[#26332A] hover:underline pt-1"
-                  >
-                    {cafeInfo.phoneDisplay}
-                  </a>
+                  <div className="pt-2 flex flex-wrap gap-3">
+                    <a
+                      href={callLink}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#F8F5ED] hover:bg-[#EFE9DE] border border-[#E8DFD3] text-[#064F50] rounded-xl text-xs font-semibold tracking-wider transition-colors"
+                    >
+                      <Phone className="w-3.5 h-3.5" />
+                      <span>{cafeInfo.phoneDisplay}</span>
+                    </a>
+
+                    <a
+                      href={whatsappLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-xl text-xs font-semibold tracking-wider transition-colors shadow-2xs"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5 fill-white" />
+                      <span>Chat on WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Action Buttons: Get Directions & Order on WhatsApp */}
-            <div className="space-y-3 pt-2">
-              <a
-                href={cafeInfo.googleMapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-3.5 bg-[#26332A] hover:bg-[#1C241E] text-[#FAF7F2] text-xs font-semibold uppercase tracking-[0.18em] rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-xs group"
-              >
-                <Navigation className="w-4 h-4 text-[#D8B774]" />
-                <span>Get Directions</span>
-                <ExternalLink className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
-
-              <a
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-3.5 bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-semibold uppercase tracking-[0.18em] rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-xs"
-              >
-                <MessageCircle className="w-4 h-4 fill-white" />
-                <span>Order on WhatsApp</span>
-              </a>
-            </div>
+            {/* Directions Action */}
+            <a
+              href={cafeInfo.googleMapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-4 bg-[#064F50] hover:bg-[#043839] text-[#F8F5ED] text-xs font-semibold uppercase tracking-[0.2em] rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 group"
+            >
+              <Navigation className="w-4 h-4 text-[#E8C45A] transition-transform group-hover:scale-110" />
+              <span>Get Directions on Google Maps</span>
+              <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+            </a>
           </div>
 
-          {/* Right Column: Google Maps Embed */}
-          <div className="lg:col-span-7 rounded-2xl overflow-hidden border border-[#E8DFD3] shadow-sm relative min-h-[400px] lg:min-h-full bg-[#EFE9DE]">
-            <iframe
-              title={`${cafeInfo.name} Location Map`}
-              src={cafeInfo.googleMapsEmbedUrl}
-              width="100%"
-              height="100%"
-              style={{ border: 0, minHeight: "420px" }}
-              allowFullScreen={false}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="w-full h-full grayscale-[15%] contrast-[105%]"
-            />
+          {/* Right Column: Google Maps Interactive Embed + Photo */}
+          <div className="lg:col-span-7 flex flex-col space-y-6">
+            {/* Interactive Map Embed */}
+            <div className="bg-white rounded-3xl p-3 border border-[#E8DFD3] shadow-md flex-1 min-h-[380px]">
+              <div className="w-full h-full min-h-[360px] rounded-2xl overflow-hidden relative">
+                <iframe
+                  title="The Classic Crush Cafe Location Map"
+                  src={cafeInfo.googleMapsEmbedUrl}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-full min-h-[360px] grayscale-[0.15] contrast-[1.05]"
+                />
+              </div>
+            </div>
 
-            <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-lg border border-[#E8DFD3] shadow-xs flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse" />
-              <span className="text-xs font-bold text-[#1C241E]">
-                Open Today ({cafeInfo.timings.hours})
-              </span>
+            {/* Cozy Cafe Ambience Card */}
+            <div className="relative rounded-2xl overflow-hidden h-48 border border-[#E8DFD3] shadow-xs">
+              <img
+                src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80"
+                alt="The Classic Crush warm cafe ambiance"
+                className="w-full h-full object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-5 text-white">
+                <div>
+                  <p className="font-display text-base font-bold text-white">
+                    Drop by for a warm cup &amp; fresh treats
+                  </p>
+                  <p className="text-xs text-[#E8C45A] font-light">
+                    Walk-ins always welcome • Free high-speed student Wi-Fi
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

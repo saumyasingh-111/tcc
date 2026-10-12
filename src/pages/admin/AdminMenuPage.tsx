@@ -168,7 +168,7 @@ export const AdminMenuPage: React.FC = () => {
         ...editingCat,
         label: catLabel.trim(),
         shortLabel: catLabel.trim(),
-        description: catDescription.trim() || undefined,
+        description: catDescription.trim() || "",
       });
       showToast(`Category "${catLabel}" updated.`);
     } else {
@@ -177,7 +177,7 @@ export const AdminMenuPage: React.FC = () => {
         id: newId,
         label: catLabel.trim(),
         shortLabel: catLabel.trim(),
-        description: catDescription.trim() || undefined,
+        description: catDescription.trim() || "",
       });
       showToast(`Category "${catLabel}" added.`);
     }

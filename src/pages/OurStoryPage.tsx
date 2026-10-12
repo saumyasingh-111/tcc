@@ -6,17 +6,17 @@ import { Heart, Sparkles, Coffee, ArrowRight } from "lucide-react";
 
 export const OurStoryPage: React.FC = () => {
   return (
-    <div className="pt-24 sm:pt-28 pb-24 bg-[#FAF7F2] min-h-screen">
+    <div className="pt-24 sm:pt-28 pb-24 bg-[#F8F5ED] min-h-screen">
       {/* Editorial Header */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 text-center mb-12 sm:mb-16">
-        <span className="text-[11px] sm:text-xs font-semibold tracking-[0.3em] uppercase text-[#755546] block mb-2">
+        <span className="text-[11px] sm:text-xs font-semibold tracking-[0.3em] uppercase text-[#078F96] block mb-2">
           About Us
         </span>
-        <h1 className="font-serif text-4xl sm:text-6xl font-normal text-[#1C241E] tracking-tight mb-4">
+        <h1 className="font-display text-4xl sm:text-6xl font-normal text-[#064F50] tracking-tight mb-4">
           OUR STORY
         </h1>
-        <div className="w-12 h-0.5 bg-[#C59F54] mx-auto mb-4" />
-        <p className="font-serif italic text-lg sm:text-2xl text-[#59605C] max-w-xl mx-auto leading-relaxed">
+        <div className="w-12 h-0.5 bg-[#E8C45A] mx-auto mb-4" />
+        <p className="font-serif italic text-lg sm:text-2xl text-[#594235] max-w-xl mx-auto leading-relaxed">
           &ldquo;A little corner made for honest food, warm bakes, and easy conversations.&rdquo;
         </p>
       </section>
@@ -33,25 +33,25 @@ export const OurStoryPage: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
           <div className="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4 text-white">
             <div>
-              <span className="text-xs uppercase tracking-[0.2em] text-[#D8B774] font-semibold block mb-1">
+              <span className="text-xs uppercase tracking-[0.2em] text-[#E8C45A] font-semibold block mb-1">
                 The Neighbourhood Gathering
               </span>
-              <p className="font-serif text-xl sm:text-2xl font-normal max-w-md">
+              <p className="font-display text-xl sm:text-2xl font-normal max-w-md">
                 Where good food brings people together every single day.
               </p>
             </div>
             <div className="inline-flex items-center gap-2 bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 text-xs">
               <VegBadge size="sm" />
-              <span>100% Vegetarian &amp; Eggless</span>
+              <span>100% Pure Vegetarian &amp; Eggless</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Editorial Story Body */}
-      <section className="max-w-3xl mx-auto px-6 space-y-10 text-[#3E4340] leading-relaxed font-light text-base sm:text-lg">
+      <section className="max-w-3xl mx-auto px-6 space-y-10 text-[#594235] leading-relaxed font-light text-base sm:text-lg">
         <div>
-          <h2 className="font-serif text-2xl sm:text-3xl text-[#1C241E] font-normal mb-4">
+          <h2 className="font-display text-2xl sm:text-3xl text-[#064F50] font-normal mb-4">
             How it all started
           </h2>
           <p>
@@ -63,19 +63,19 @@ export const OurStoryPage: React.FC = () => {
         </div>
 
         <div className="p-8 bg-[#FCFAF7] rounded-2xl border border-[#E8DFD3]">
-          <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-2.5 mb-3">
             <VegBadge size="md" />
-            <h3 className="font-serif text-xl font-bold text-[#1C241E]">
+            <h3 className="font-display text-xl font-bold text-[#064F50]">
               Our Pure Vegetarian Promise
             </h3>
           </div>
-          <p className="text-sm sm:text-base text-[#575E5B] leading-relaxed">
+          <p className="text-sm sm:text-base text-[#594235]/90 leading-relaxed font-light">
             Every single item on our counter is strictly 100% vegetarian. All of our celebration cakes, chocolate pastries, and brownie cups are completely eggless, baked with fresh butter, wholesome flour, and rich cocoa. You never have to ask twice or check twice — you can order anything on the menu with complete peace of mind.
           </p>
         </div>
 
         <div>
-          <h2 className="font-serif text-2xl sm:text-3xl text-[#1C241E] font-normal mb-4">
+          <h2 className="font-display text-2xl sm:text-3xl text-[#064F50] font-normal mb-4">
             Baked fresh, served warm
           </h2>
           <p>
@@ -100,8 +100,8 @@ export const OurStoryPage: React.FC = () => {
               />
             </div>
             <div className="p-4 bg-white">
-              <h4 className="font-serif font-bold text-base text-[#1C241E]">Daily Morning Bakes</h4>
-              <p className="text-xs text-[#767E7A] mt-1 font-light">Flaky puff patties and sweet pastries fresh out of the oven</p>
+              <h4 className="font-display font-bold text-base text-[#064F50]">Daily Morning Bakes</h4>
+              <p className="text-xs text-[#594235]/70 mt-1 font-light">Flaky puff patties and sweet pastries fresh out of the oven</p>
             </div>
           </div>
 
@@ -115,8 +115,8 @@ export const OurStoryPage: React.FC = () => {
               />
             </div>
             <div className="p-4 bg-white">
-              <h4 className="font-serif font-bold text-base text-[#1C241E]">Handcrafted Brews</h4>
-              <p className="text-xs text-[#767E7A] mt-1 font-light">From steaming kadak chai to frothy thick cold coffees</p>
+              <h4 className="font-display font-bold text-base text-[#064F50]">Handcrafted Brews</h4>
+              <p className="text-xs text-[#594235]/70 mt-1 font-light">From steaming kadak chai to frothy thick cold coffees</p>
             </div>
           </div>
 
@@ -130,8 +130,8 @@ export const OurStoryPage: React.FC = () => {
               />
             </div>
             <div className="p-4 bg-white">
-              <h4 className="font-serif font-bold text-base text-[#1C241E]">Your Cozy Corner</h4>
-              <p className="text-xs text-[#767E7A] mt-1 font-light">Made for study sessions, birthday treats, and everyday hangouts</p>
+              <h4 className="font-display font-bold text-base text-[#064F50]">Your Cozy Corner</h4>
+              <p className="text-xs text-[#594235]/70 mt-1 font-light">Made for study sessions, birthday treats, and everyday hangouts</p>
             </div>
           </div>
         </div>
@@ -141,31 +141,31 @@ export const OurStoryPage: React.FC = () => {
       <section className="max-w-4xl mx-auto px-4 sm:px-6 border-t border-[#E8DFD3] pt-14">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
           <div className="space-y-2">
-            <div className="w-10 h-10 rounded-full bg-[#EFE9DE] flex items-center justify-center text-[#26332A] mx-auto sm:mx-0">
+            <div className="w-10 h-10 rounded-full bg-[#078F96]/10 flex items-center justify-center text-[#078F96] mx-auto sm:mx-0">
               <Heart className="w-5 h-5" />
             </div>
-            <h4 className="font-serif font-bold text-lg text-[#1C241E]">Honest &amp; Local</h4>
-            <p className="text-xs text-[#575E5B] font-light leading-relaxed">
+            <h4 className="font-display font-bold text-lg text-[#064F50]">Honest &amp; Local</h4>
+            <p className="text-xs text-[#594235]/80 font-light leading-relaxed">
               Student-friendly pricing without compromising on quality or hygiene.
             </p>
           </div>
 
           <div className="space-y-2">
-            <div className="w-10 h-10 rounded-full bg-[#EFE9DE] flex items-center justify-center text-[#26332A] mx-auto sm:mx-0">
+            <div className="w-10 h-10 rounded-full bg-[#078F96]/10 flex items-center justify-center text-[#078F96] mx-auto sm:mx-0">
               <Sparkles className="w-5 h-5" />
             </div>
-            <h4 className="font-serif font-bold text-lg text-[#1C241E]">100% Vegetarian</h4>
-            <p className="text-xs text-[#575E5B] font-light leading-relaxed">
+            <h4 className="font-display font-bold text-lg text-[#064F50]">100% Vegetarian</h4>
+            <p className="text-xs text-[#594235]/80 font-light leading-relaxed">
               Strictly eggless bakes and vegetarian savouries prepared in a clean kitchen.
             </p>
           </div>
 
           <div className="space-y-2">
-            <div className="w-10 h-10 rounded-full bg-[#EFE9DE] flex items-center justify-center text-[#26332A] mx-auto sm:mx-0">
+            <div className="w-10 h-10 rounded-full bg-[#078F96]/10 flex items-center justify-center text-[#078F96] mx-auto sm:mx-0">
               <Coffee className="w-5 h-5" />
             </div>
-            <h4 className="font-serif font-bold text-lg text-[#1C241E]">Warm Hospitality</h4>
-            <p className="text-xs text-[#575E5B] font-light leading-relaxed">
+            <h4 className="font-display font-bold text-lg text-[#064F50]">Warm Hospitality</h4>
+            <p className="text-xs text-[#594235]/80 font-light leading-relaxed">
               A welcoming smile, quick service, and a table that always feels like home.
             </p>
           </div>
@@ -175,7 +175,7 @@ export const OurStoryPage: React.FC = () => {
         <div className="text-center mt-14">
           <Link
             to="/menu"
-            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#26332A] text-white hover:bg-[#1C241E] text-xs font-semibold uppercase tracking-[0.2em] rounded-full transition-all"
+            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#064F50] hover:bg-[#043839] text-[#F8F5ED] text-xs font-semibold uppercase tracking-[0.2em] rounded-full transition-all shadow-md"
           >
             <span>Explore What We Bake</span>
             <ArrowRight className="w-4 h-4" />

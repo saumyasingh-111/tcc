@@ -83,7 +83,7 @@ export const AdminOrdersPage: React.FC = () => {
       actions={
         <button
           onClick={createSimulatedOrder}
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#26332A] hover:bg-[#1C241E] text-white text-xs font-semibold uppercase tracking-wider rounded-xl transition-all shadow-2xs cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#064F50] hover:bg-[#043839] text-white text-xs font-semibold uppercase tracking-wider rounded-xl transition-all shadow-xs cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>Simulate New Order</span>

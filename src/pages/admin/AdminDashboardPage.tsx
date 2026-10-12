@@ -65,7 +65,7 @@ export const AdminDashboardPage: React.FC = () => {
       actions={
         <Link
           to="/admin/menu"
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#26332A] hover:bg-[#1C241E] text-[#FAF7F2] text-xs font-semibold uppercase tracking-wider rounded-xl transition-all shadow-2xs"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#064F50] hover:bg-[#043839] text-[#F8F5ED] text-xs font-semibold uppercase tracking-wider rounded-xl transition-all shadow-xs"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>Add Item</span>

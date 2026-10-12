@@ -11,51 +11,55 @@ export const Navbar: React.FC = () => {
   const { cafeInfo } = useData();
 
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Menu", path: "/menu" },
-    { name: "Our Story", path: "/our-story" },
-    { name: "Gallery", path: "/gallery" },
-    { name: "Visit Us", path: "/visit-us" },
+    { name: "HOME", path: "/" },
+    { name: "MENU", path: "/menu" },
+    { name: "GIFTING", path: "/gifting" },
+    { name: "OUR STORY", path: "/our-story" },
+    { name: "GALLERY", path: "/gallery" },
+    { name: "VISIT US", path: "/visit-us" },
   ];
-
-  const whatsappLink = `https://wa.me/${cafeInfo.whatsappNumber}?text=${encodeURIComponent(
-    `Hi ${cafeInfo.name}! 👋 I am visiting your website and would like to order.`
-  )}`;
 
   return (
     <>
-      <header className="sticky top-0 left-0 right-0 z-40 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#E8DFD3] shadow-2xs py-3.5 transition-all">
+      <header className="sticky top-0 left-0 right-0 z-40 bg-[#F8F5ED]/95 backdrop-blur-md border-b border-[#E8DFD3] shadow-xs py-3.5 transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            {/* Logo — Inspired by Cafecito Minimal Editorial Identity */}
+            {/* Left Wordmark: Official TCC Logo + Brand Wordmark + Veg Badge */}
             <NavLink
               to="/"
-              className="group flex flex-col transition-opacity hover:opacity-90"
+              className="group flex items-center gap-2.5 sm:gap-3 transition-opacity hover:opacity-95"
               onClick={() => setMobileMenuOpen(false)}
             >
-              <div className="flex items-center gap-2">
-                <span className="font-serif text-xl sm:text-2xl font-bold tracking-[0.16em] uppercase text-[#1C241E]">
-                  {cafeInfo.name}
+              <img
+                src="/tcc-logo.png"
+                alt="The Classic Crush"
+                className="h-9 sm:h-11 w-auto object-contain transition-transform group-hover:scale-102"
+              />
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <span className="font-display text-base sm:text-lg md:text-xl font-bold tracking-[0.14em] uppercase text-[#064F50] leading-none">
+                    THE CLASSIC CRUSH
+                  </span>
+                  <VegBadge size="sm" className="hidden sm:inline-flex" />
+                </div>
+                <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.32em] font-medium text-[#594235] mt-0.5">
+                  BAKERY &amp; CAFE
                 </span>
-                <VegBadge size="sm" />
               </div>
-              <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.28em] font-medium text-[#755546]">
-                {cafeInfo.tagline}
-              </span>
             </NavLink>
 
-            {/* Desktop Navigation Links */}
-            <nav className="hidden md:flex items-center space-x-7 lg:space-x-9">
+            {/* Center Navigation Links */}
+            <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
               {navLinks.map((link) => (
                 <NavLink
                   key={link.path}
                   to={link.path}
                   end={link.path === "/"}
                   className={({ isActive }) =>
-                    `text-xs lg:text-sm tracking-[0.16em] uppercase transition-all duration-200 py-1 border-b-2 ${
+                    `text-xs lg:text-[13px] tracking-[0.2em] uppercase transition-all duration-200 py-1 border-b-2 font-medium ${
                       isActive
-                        ? "text-[#1C241E] border-[#1C241E] font-semibold"
-                        : "text-[#59605C] border-transparent hover:text-[#1C241E]"
+                        ? "text-[#064F50] border-[#078F96] font-semibold"
+                        : "text-[#594235]/80 border-transparent hover:text-[#064F50] hover:border-[#D8C7AC]"
                     }`
                   }
                 >
@@ -66,43 +70,41 @@ export const Navbar: React.FC = () => {
 
             {/* Right Action CTAs */}
             <div className="hidden sm:flex items-center gap-3">
-              {/* Order Bag Button */}
+              {/* Shopping Bag Button with Live Item Count */}
               <button
                 onClick={openDrawer}
-                className="relative p-2.5 rounded-full bg-[#EFE9DE] text-[#1C241E] hover:bg-[#E3D9C9] transition-all duration-200 cursor-pointer"
+                className="relative p-2.5 rounded-full bg-[#EFE9DE] text-[#064F50] hover:bg-[#D8C7AC]/40 transition-all duration-200 cursor-pointer shadow-2xs"
                 title="View your order bag"
                 aria-label="View order bag"
               >
                 <ShoppingBag className="w-4 h-4" />
                 {totalCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#26332A] text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#FAF7F2]">
+                  <span className="absolute -top-1 -right-1 bg-[#078F96] text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#F8F5ED] shadow-xs">
                     {totalCount}
                   </span>
                 )}
               </button>
 
-              {/* Order Online / WhatsApp — Clean Pill Outline Button */}
-              <a
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2 text-xs font-semibold uppercase tracking-[0.18em] rounded-full border border-[#26332A] text-[#1C241E] hover:bg-[#26332A] hover:text-[#FAF7F2] transition-all duration-200 shadow-2xs"
+              {/* Order Online / Quick Drawer — Elegant Outlined Button */}
+              <button
+                onClick={openDrawer}
+                className="inline-flex items-center gap-2 px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] rounded-full border border-[#064F50] text-[#064F50] hover:bg-[#064F50] hover:text-[#F8F5ED] transition-all duration-200 shadow-2xs cursor-pointer group"
               >
-                <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
-                <span>Order Online</span>
-              </a>
+                <MessageCircle className="w-3.5 h-3.5 text-[#078F96] group-hover:text-white transition-colors" />
+                <span>ORDER ONLINE</span>
+              </button>
             </div>
 
             {/* Mobile Controls */}
             <div className="flex sm:hidden items-center gap-2">
               <button
                 onClick={openDrawer}
-                className="relative p-2 rounded-full text-[#1C241E] bg-[#EFE9DE] cursor-pointer"
-                aria-label="Order bag"
+                className="relative p-2 rounded-full bg-[#EFE9DE] text-[#064F50]"
+                aria-label="View order bag"
               >
                 <ShoppingBag className="w-4 h-4" />
                 {totalCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#26332A] text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-[#078F96] text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-[#F8F5ED]">
                     {totalCount}
                   </span>
                 )}
@@ -110,8 +112,8 @@ export const Navbar: React.FC = () => {
 
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-md text-[#1C241E] cursor-pointer"
-                aria-label="Toggle navigation menu"
+                className="p-2 rounded-lg text-[#064F50] hover:bg-[#EFE9DE] transition-colors"
+                aria-label="Toggle mobile menu"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -120,74 +122,66 @@ export const Navbar: React.FC = () => {
         </div>
       </header>
 
-      {/* Mobile Drawer Navigation */}
+      {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 sm:hidden">
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
-            onClick={() => setMobileMenuOpen(false)}
-          />
-
-          {/* Drawer Sheet */}
-          <div className="fixed top-0 right-0 bottom-0 w-[80%] max-w-sm bg-[#FAF7F2] shadow-2xl p-6 flex flex-col justify-between z-50">
-            <div>
-              <div className="flex items-center justify-between pb-6 border-b border-[#E8DFD3]">
-                <div>
-                  <h3 className="font-serif text-lg font-bold tracking-widest text-[#1C241E]">
-                    {cafeInfo.name}
-                  </h3>
-                  <p className="text-[10px] tracking-widest text-[#755546] uppercase font-medium">
-                    {cafeInfo.tagline}
-                  </p>
-                </div>
-                <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-1.5 text-[#3E4340] hover:text-black rounded-lg cursor-pointer"
-                  aria-label="Close menu"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="mt-4 flex items-center gap-2 text-xs text-[#2E7D32] bg-[#E8F5E9] px-3 py-1.5 rounded-full w-fit">
+        <div className="fixed inset-0 top-[65px] z-30 bg-[#F8F5ED]/98 backdrop-blur-lg flex flex-col justify-between p-6 md:hidden animate-hero-fade">
+          <div className="space-y-4 pt-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E8DFD3]">
+              <div className="flex items-center gap-2">
                 <VegBadge size="sm" />
-                <span className="font-medium">100% Pure Vegetarian</span>
+                <span className="text-xs uppercase tracking-widest text-[#064F50] font-semibold">
+                  100% Pure Vegetarian
+                </span>
               </div>
-
-              <nav className="mt-6 flex flex-col space-y-3">
-                {navLinks.map((link) => (
-                  <NavLink
-                    key={link.path}
-                    to={link.path}
-                    end={link.path === "/"}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={({ isActive }) =>
-                      `text-base font-serif py-2 border-b border-[#EFE9DE] transition-colors flex items-center justify-between ${
-                        isActive
-                          ? "text-[#1C241E] font-bold text-lg"
-                          : "text-[#575E5B] hover:text-[#1C241E]"
-                      }`
-                    }
-                  >
-                    <span>{link.name}</span>
-                    <span className="text-xs text-[#C59F54]">→</span>
-                  </NavLink>
-                ))}
-              </nav>
+              <span className="text-[10px] text-[#594235] tracking-wider uppercase font-medium">
+                Daily 11am - 11pm
+              </span>
             </div>
 
-            <div className="pt-6 border-t border-[#E8DFD3] space-y-3">
-              <a
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-3 bg-[#26332A] text-[#FAF7F2] text-xs font-semibold uppercase tracking-widest rounded-lg flex items-center justify-center gap-2 shadow-xs"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Order on WhatsApp</span>
-              </a>
-            </div>
+            <nav className="flex flex-col space-y-3 pt-2">
+              {navLinks.map((link) => (
+                <NavLink
+                  key={link.path}
+                  to={link.path}
+                  end={link.path === "/"}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `text-lg font-serif tracking-[0.16em] uppercase py-2 transition-colors ${
+                      isActive
+                        ? "text-[#078F96] font-bold border-l-2 border-[#078F96] pl-3"
+                        : "text-[#2C201A] hover:text-[#078F96] pl-1"
+                    }`
+                  }
+                >
+                  {link.name}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
+
+          <div className="space-y-3 pb-8 pt-6 border-t border-[#E8DFD3]">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openDrawer();
+              }}
+              className="w-full py-3.5 bg-[#064F50] hover:bg-[#043839] text-[#F8F5ED] text-xs font-semibold uppercase tracking-[0.2em] rounded-full flex items-center justify-center gap-2 shadow-sm"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              <span>View Order Bag ({totalCount})</span>
+            </button>
+
+            <a
+              href={`https://wa.me/${cafeInfo.whatsappNumber}?text=${encodeURIComponent(
+                `Hi ${cafeInfo.name}! 👋 I am visiting your website and would like to order.`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3 border border-[#064F50] text-[#064F50] hover:bg-[#EFE9DE] text-xs font-semibold uppercase tracking-[0.18em] rounded-full flex items-center justify-center gap-2"
+            >
+              <MessageCircle className="w-4 h-4 text-[#078F96]" />
+              <span>WhatsApp Us Directly</span>
+            </a>
           </div>
         </div>
       )}

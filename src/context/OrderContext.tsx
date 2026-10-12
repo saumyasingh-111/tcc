@@ -3,13 +3,34 @@ import type { MenuItem } from "../data/menuData";
 import { useData } from "./DataContext";
 
 export interface OrderItem {
-  item: MenuItem;
+  item: MenuItem & {
+    isGift?: boolean;
+    giftNote?: string;
+    giftAddons?: string[];
+    isCustomGift?: boolean;
+    recipientName?: string;
+    customSummary?: string;
+  };
   quantity: number;
+}
+
+export interface AddGiftPayload {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  description?: string;
+  giftNote?: string;
+  giftAddons?: string[];
+  recipientName?: string;
+  isCustomGift?: boolean;
+  customSummary?: string;
 }
 
 interface OrderContextType {
   items: OrderItem[];
   addItem: (item: MenuItem) => void;
+  addGiftToOrder: (gift: AddGiftPayload) => void;
   removeItem: (itemId: string) => void;
   updateQuantity: (itemId: string, delta: number) => void;
   clearOrder: () => void;
@@ -58,6 +79,28 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
   };
 
+  const addGiftToOrder = (gift: AddGiftPayload) => {
+    const giftId = `${gift.id}-${Date.now().toString().slice(-4)}`;
+    const syntheticItem: OrderItem["item"] = {
+      id: giftId,
+      name: gift.name,
+      category: "all",
+      price: gift.price,
+      description: gift.description || "",
+      image: gift.image,
+      isVegetarian: true,
+      isGift: true,
+      giftNote: gift.giftNote,
+      giftAddons: gift.giftAddons,
+      recipientName: gift.recipientName,
+      isCustomGift: gift.isCustomGift,
+      customSummary: gift.customSummary,
+    };
+
+    setItems((prev) => [...prev, { item: syntheticItem, quantity: 1 }]);
+    setIsDrawerOpen(true);
+  };
+
   const removeItem = (itemId: string) => {
     setItems((prev) => prev.filter((i) => i.item.id !== itemId));
   };
@@ -90,23 +133,47 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       return `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
     }
 
+    const hasGifts = items.some((i) => i.item.isGift);
     const lines: string[] = [
       `Hi ${cafeName}! 👋`,
-      `I would like to place an order from your website:`,
+      hasGifts
+        ? `I would like to place an order/gifting inquiry from your website:`
+        : `I would like to place an order from your website:`,
       "",
     ];
 
     items.forEach((i) => {
-      lines.push(`• ${i.quantity}x ${i.item.name} — ₹${i.item.price * i.quantity}`);
+      if (i.item.isGift) {
+        lines.push(`🎁 ${i.quantity}x ${i.item.name} — ₹${i.item.price * i.quantity}`);
+        if (i.item.customSummary) {
+          lines.push(`   Includes: ${i.item.customSummary}`);
+        }
+        if (i.item.recipientName) {
+          lines.push(`   For: ${i.item.recipientName}`);
+        }
+        if (i.item.giftAddons && i.item.giftAddons.length > 0) {
+          lines.push(`   Add-ons: ${i.item.giftAddons.join(", ")}`);
+        }
+        if (i.item.giftNote) {
+          lines.push(`   Card Message: "${i.item.giftNote}"`);
+        }
+      } else {
+        lines.push(`• ${i.quantity}x ${i.item.name} — ₹${i.item.price * i.quantity}`);
+      }
     });
 
     lines.push("");
-    lines.push(`Estimated Total: ₹${totalAmount}`);
+    lines.push(`Estimated Subtotal: ₹${totalAmount}`);
     lines.push("");
-    lines.push("Order Details:");
+    lines.push("Customer Details:");
     lines.push("Name: ");
-    lines.push("Type (Dine-in / Takeaway / Delivery): ");
-    lines.push("Note / instructions (if any): ");
+    lines.push("Contact Phone: ");
+    lines.push("Fulfilment: Pickup / Delivery");
+    lines.push("Requested Date & Time: ");
+    lines.push("Delivery Address (if applicable): ");
+    lines.push("Special instructions: ");
+    lines.push("");
+    lines.push("*(Please confirm order & availability)*");
 
     const text = lines.join("\n");
     return `https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`;
@@ -117,6 +184,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       value={{
         items,
         addItem,
+        addGiftToOrder,
         removeItem,
         updateQuantity,
         clearOrder,

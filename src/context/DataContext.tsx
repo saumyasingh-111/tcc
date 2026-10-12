@@ -2,6 +2,28 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { MENU_ITEMS, MENU_CATEGORIES, type MenuItem, type MenuCategory } from "../data/menuData";
 import { CAFE_CONFIG, type CafeConfig } from "../data/cafeConfig";
 import { IMAGES } from "../data/images";
+import {
+  GIFT_PRODUCTS,
+  GIFT_CATEGORIES,
+  GIFT_ADDONS,
+  DEFAULT_GIFTING_SETTINGS,
+  INITIAL_GIFT_ORDERS,
+  type GiftProduct,
+  type GiftCategory,
+  type GiftAddon,
+  type GiftingSettings,
+  type GiftingOrderRecord,
+  type GiftingOrderStatus,
+} from "../data/giftingData";
+
+export type {
+  GiftProduct,
+  GiftCategory,
+  GiftAddon,
+  GiftingSettings,
+  GiftingOrderRecord,
+  GiftingOrderStatus,
+};
 
 export type OrderStatus = "Pending" | "Confirmed" | "Preparing" | "Ready" | "Completed" | "Cancelled";
 export type ReservationStatus = "Pending" | "Confirmed" | "Completed" | "Cancelled";
@@ -102,13 +124,43 @@ interface DataContextType {
   updateReservationStatus: (id: string, status: ReservationStatus) => void;
   deleteReservation: (id: string) => void;
 
+  // Gifting Products
+  giftProducts: GiftProduct[];
+  addGiftProduct: (gift: Omit<GiftProduct, "id"> & { id?: string }) => void;
+  updateGiftProduct: (gift: GiftProduct) => void;
+  deleteGiftProduct: (id: string) => void;
+  toggleGiftAvailability: (id: string) => void;
+
+  // Gifting Categories
+  giftCategories: GiftCategory[];
+  addGiftCategory: (cat: GiftCategory) => void;
+  updateGiftCategory: (cat: GiftCategory) => void;
+  deleteGiftCategory: (id: string) => void;
+
+  // Gifting Add-ons
+  giftAddons: GiftAddon[];
+  addGiftAddon: (addon: Omit<GiftAddon, "id"> & { id?: string }) => void;
+  updateGiftAddon: (addon: GiftAddon) => void;
+  deleteGiftAddon: (id: string) => void;
+  toggleAddonAvailability: (id: string) => void;
+
+  // Gifting Orders
+  giftingOrders: GiftingOrderRecord[];
+  addGiftingOrder: (order: Omit<GiftingOrderRecord, "id" | "createdAt">) => GiftingOrderRecord;
+  updateGiftingOrderStatus: (orderId: string, status: GiftingOrderStatus) => void;
+  deleteGiftingOrder: (orderId: string) => void;
+
+  // Gifting Settings
+  giftingSettings: GiftingSettings;
+  updateGiftingSettings: (settings: Partial<GiftingSettings>) => void;
+
   // Settings
   settings: AdminSettings;
   updateSettings: (settings: Partial<AdminSettings>) => void;
   resetToDefaults: () => void;
 }
 
-const STORAGE_KEY = "classic_crush_store_v2";
+const STORAGE_KEY = "classic_crush_store_v3";
 
 const initialGallery: GalleryRecord[] = IMAGES.gallery.map((g, idx) => ({
   id: `gal-${idx + 1}`,
@@ -236,7 +288,7 @@ const initialHomepage: HomepageContent = {
   heroTitle: "THE CLASSIC CRUSH",
   heroSubtitle: "BAKERY & CAFE",
   heroDescription: "Freshly made. Comfortingly familiar.",
-  heroImage: "/hero-indian-cafe.jpg",
+  heroImage: "/dark-white-delight.jpg",
   storyHeading: "Made for good food & good company.",
   storyDescription:
     "We created The Classic Crush for anyone looking for genuinely delicious bakery treats and hearty savory bites without pretentious dining prices. From steaming morning chai and flaky patties to midnight chocolate cravings with college friends.",
@@ -325,6 +377,47 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return initialSettings;
   });
 
+  // Gifting state
+  const [giftProducts, setGiftProducts] = useState<GiftProduct[]>(() => {
+    try {
+      const saved = localStorage.getItem(`${STORAGE_KEY}_gift_products`);
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return GIFT_PRODUCTS;
+  });
+
+  const [giftCategories, setGiftCategories] = useState<GiftCategory[]>(() => {
+    try {
+      const saved = localStorage.getItem(`${STORAGE_KEY}_gift_categories`);
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return GIFT_CATEGORIES;
+  });
+
+  const [giftAddons, setGiftAddons] = useState<GiftAddon[]>(() => {
+    try {
+      const saved = localStorage.getItem(`${STORAGE_KEY}_gift_addons`);
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return GIFT_ADDONS;
+  });
+
+  const [giftingSettings, setGiftingSettings] = useState<GiftingSettings>(() => {
+    try {
+      const saved = localStorage.getItem(`${STORAGE_KEY}_gifting_settings`);
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return DEFAULT_GIFTING_SETTINGS;
+  });
+
+  const [giftingOrders, setGiftingOrders] = useState<GiftingOrderRecord[]>(() => {
+    try {
+      const saved = localStorage.getItem(`${STORAGE_KEY}_gifting_orders`);
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_GIFT_ORDERS;
+  });
+
   // Sync to LocalStorage on updates
   useEffect(() => {
     try {
@@ -380,6 +473,74 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {}
   }, [settings]);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(`${STORAGE_KEY}_gift_products`, JSON.stringify(giftProducts));
+    } catch {}
+  }, [giftProducts]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(`${STORAGE_KEY}_gift_categories`, JSON.stringify(giftCategories));
+    } catch {}
+  }, [giftCategories]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(`${STORAGE_KEY}_gift_addons`, JSON.stringify(giftAddons));
+    } catch {}
+  }, [giftAddons]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(`${STORAGE_KEY}_gifting_settings`, JSON.stringify(giftingSettings));
+    } catch {}
+  }, [giftingSettings]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(`${STORAGE_KEY}_gifting_orders`, JSON.stringify(giftingOrders));
+    } catch {}
+  }, [giftingOrders]);
+
+  // Auth token helper for authenticated API calls
+  const getAuthToken = (): string | null => {
+    try {
+      return (
+        sessionStorage.getItem("classic_crush_admin_session_token") ||
+        localStorage.getItem("classic_crush_admin_session_token")
+      );
+    } catch {
+      return null;
+    }
+  };
+
+  // Sync initial data from backend if available
+  useEffect(() => {
+    fetch("/api/menu")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.items && Array.isArray(data.items) && data.items.length > 0) {
+          setMenuItems(data.items);
+        }
+      })
+      .catch(() => {});
+
+    const token = getAuthToken();
+    if (token) {
+      fetch("/api/orders", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data?.orders && Array.isArray(data.orders) && data.orders.length > 0) {
+            setOrders(data.orders);
+          }
+        })
+        .catch(() => {});
+    }
+  }, []);
+
   // MENU OPERATIONS
   const addMenuItem = (item: Omit<MenuItem, "id"> & { id?: string }) => {
     const newId = item.id || item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-" + Date.now().toString().slice(-4);
@@ -390,16 +551,42 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       isVegetarian: true, // Always vegetarian
     };
     setMenuItems((prev) => [fullItem, ...prev]);
+
+    const token = getAuthToken();
+    if (token) {
+      fetch("/api/menu", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ item: fullItem }),
+      }).catch(() => {});
+    }
   };
 
   const updateMenuItem = (item: MenuItem) => {
     setMenuItems((prev) => prev.map((i) => (i.id === item.id ? item : i)));
+
+    const token = getAuthToken();
+    if (token) {
+      fetch("/api/menu", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ item }),
+      }).catch(() => {});
+    }
   };
 
   const deleteMenuItem = (id: string) => {
     setMenuItems((prev) => prev.filter((i) => i.id !== id));
     // also remove from featured if it was featured
     setFeaturedItemIds((prev) => prev.filter((fid) => fid !== id));
+
+    const token = getAuthToken();
+    if (token) {
+      fetch(`/api/menu?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      }).catch(() => {});
+    }
   };
 
   const duplicateMenuItem = (id: string) => {
@@ -510,15 +697,40 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       createdAt: timeStr,
     };
     setOrders((prev) => [fullOrder, ...prev]);
+
+    // Sync to backend
+    fetch("/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(fullOrder),
+    }).catch(() => {});
+
     return fullOrder;
   };
 
   const updateOrderStatus = (orderId: string, status: OrderStatus) => {
     setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status } : o)));
+
+    const token = getAuthToken();
+    if (token) {
+      fetch("/api/orders", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ id: orderId, status }),
+      }).catch(() => {});
+    }
   };
 
   const deleteOrder = (orderId: string) => {
     setOrders((prev) => prev.filter((o) => o.id !== orderId));
+
+    const token = getAuthToken();
+    if (token) {
+      fetch(`/api/orders?id=${encodeURIComponent(orderId)}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      }).catch(() => {});
+    }
   };
 
   // RESERVATIONS
@@ -538,6 +750,119 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setReservations((prev) => prev.filter((r) => r.id !== id));
   };
 
+  // GIFTING OPERATIONS
+  const addGiftProduct = (gift: Omit<GiftProduct, "id"> & { id?: string }) => {
+    const slug = gift.slug || gift.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const newId = gift.id || slug;
+    const fullGift: GiftProduct = {
+      ...gift,
+      id: newId,
+      slug,
+      sortOrder: gift.sortOrder || giftProducts.length + 1,
+    };
+    setGiftProducts((prev) => [fullGift, ...prev]);
+
+    const token = getAuthToken();
+    if (token) {
+      fetch("/api/gifting", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ item: fullGift }),
+      }).catch(() => {});
+    }
+  };
+
+  const updateGiftProduct = (updated: GiftProduct) => {
+    setGiftProducts((prev) => prev.map((g) => (g.id === updated.id ? updated : g)));
+
+    const token = getAuthToken();
+    if (token) {
+      fetch("/api/gifting", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ item: updated }),
+      }).catch(() => {});
+    }
+  };
+
+  const deleteGiftProduct = (id: string) => {
+    setGiftProducts((prev) => prev.filter((g) => g.id !== id));
+
+    const token = getAuthToken();
+    if (token) {
+      fetch(`/api/gifting?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      }).catch(() => {});
+    }
+  };
+
+  const toggleGiftAvailability = (id: string) => {
+    setGiftProducts((prev) =>
+      prev.map((g) => (g.id === id ? { ...g, isAvailable: !g.isAvailable } : g))
+    );
+  };
+
+  const addGiftCategory = (cat: GiftCategory) => {
+    setGiftCategories((prev) => [...prev, cat]);
+  };
+
+  const updateGiftCategory = (cat: GiftCategory) => {
+    setGiftCategories((prev) => prev.map((c) => (c.id === cat.id ? cat : c)));
+  };
+
+  const deleteGiftCategory = (id: string) => {
+    setGiftCategories((prev) => prev.filter((c) => c.id !== id));
+  };
+
+  const addGiftAddon = (addon: Omit<GiftAddon, "id"> & { id?: string }) => {
+    const newId = addon.id || `addon-${Date.now()}`;
+    setGiftAddons((prev) => [...prev, { ...addon, id: newId }]);
+  };
+
+  const updateGiftAddon = (addon: GiftAddon) => {
+    setGiftAddons((prev) => prev.map((a) => (a.id === addon.id ? addon : a)));
+  };
+
+  const deleteGiftAddon = (id: string) => {
+    setGiftAddons((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  const toggleAddonAvailability = (id: string) => {
+    setGiftAddons((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, isAvailable: !a.isAvailable } : a))
+    );
+  };
+
+  const addGiftingOrder = (
+    order: Omit<GiftingOrderRecord, "id" | "createdAt">
+  ): GiftingOrderRecord => {
+    const newId = `G-${200 + giftingOrders.length + 1}`;
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const fullOrder: GiftingOrderRecord = {
+      ...order,
+      id: newId,
+      createdAt: timeStr,
+    };
+    setGiftingOrders((prev) => [fullOrder, ...prev]);
+    return fullOrder;
+  };
+
+  const updateGiftingOrderStatus = (orderId: string, status: GiftingOrderStatus) => {
+    setGiftingOrders((prev) =>
+      prev.map((o) => (o.id === orderId ? { ...o, status } : o))
+    );
+  };
+
+  const deleteGiftingOrder = (orderId: string) => {
+    setGiftingOrders((prev) => prev.filter((o) => o.id !== orderId));
+  };
+
+  const updateGiftingSettings = (newSettings: Partial<GiftingSettings>) => {
+    setGiftingSettings((prev) => ({ ...prev, ...newSettings }));
+  };
+
   // SETTINGS
   const updateSettings = (newSettings: Partial<AdminSettings>) => {
     setSettings((prev) => ({ ...prev, ...newSettings }));
@@ -552,6 +877,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCafeInfo(CAFE_CONFIG);
     setOrders(initialOrders);
     setReservations(initialReservations);
+    setGiftProducts(GIFT_PRODUCTS);
+    setGiftCategories(GIFT_CATEGORIES);
+    setGiftAddons(GIFT_ADDONS);
+    setGiftingSettings(DEFAULT_GIFTING_SETTINGS);
+    setGiftingOrders(INITIAL_GIFT_ORDERS);
     setSettings(initialSettings);
     localStorage.clear();
   };
@@ -597,6 +927,31 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addReservation,
         updateReservationStatus,
         deleteReservation,
+
+        giftProducts,
+        addGiftProduct,
+        updateGiftProduct,
+        deleteGiftProduct,
+        toggleGiftAvailability,
+
+        giftCategories,
+        addGiftCategory,
+        updateGiftCategory,
+        deleteGiftCategory,
+
+        giftAddons,
+        addGiftAddon,
+        updateGiftAddon,
+        deleteGiftAddon,
+        toggleAddonAvailability,
+
+        giftingOrders,
+        addGiftingOrder,
+        updateGiftingOrderStatus,
+        deleteGiftingOrder,
+
+        giftingSettings,
+        updateGiftingSettings,
 
         settings,
         updateSettings,

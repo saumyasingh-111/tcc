@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { DataProvider, useData } from "./context/DataContext";
-import { AuthProvider, ProtectedAdminRoute } from "./context/AuthContext";
+import { AuthProvider, useAuth, ProtectedAdminRoute } from "./context/AuthContext";
 import { ToastProvider } from "./context/ToastContext";
 import { OrderProvider } from "./context/OrderContext";
 import { ScrollToTop } from "./components/ScrollToTop";
@@ -16,11 +16,15 @@ import { MenuPage } from "./pages/MenuPage";
 import { OurStoryPage } from "./pages/OurStoryPage";
 import { GalleryPage } from "./pages/GalleryPage";
 import { VisitUsPage } from "./pages/VisitUsPage";
+import { GiftingPage } from "./pages/GiftingPage";
+import { BuildYourGiftPage } from "./pages/BuildYourGiftPage";
+import { GiftDetailPage } from "./pages/GiftDetailPage";
 
 // Admin Portal Pages
 import { AdminLoginPage } from "./pages/admin/AdminLoginPage";
 import { AdminDashboardPage } from "./pages/admin/AdminDashboardPage";
 import { AdminMenuPage } from "./pages/admin/AdminMenuPage";
+import { AdminGiftingPage } from "./pages/admin/AdminGiftingPage";
 import { AdminOrdersPage } from "./pages/admin/AdminOrdersPage";
 import { AdminFeaturedPage } from "./pages/admin/AdminFeaturedPage";
 import { AdminGalleryPage } from "./pages/admin/AdminGalleryPage";
@@ -37,7 +41,7 @@ const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =
   const { settings } = useData();
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#262A28] flex flex-col font-sans selection:bg-[#E5DBCA] selection:text-[#1C241E]">
+    <div className="min-h-screen bg-[#F8F5ED] text-[#2C201A] flex flex-col font-sans selection:bg-[#078F96]/20 selection:text-[#064F50]">
       {settings.isMaintenanceMode && (
         <div className="bg-[#755546] text-[#FAF7F2] text-xs text-center py-2 px-4 font-medium tracking-wide">
           Notice: The cafe menu is currently in maintenance mode. Please call or WhatsApp us for instant assistance.
@@ -50,6 +54,16 @@ const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =
       <MobileStickyBar />
     </div>
   );
+};
+
+/**
+ * Direct entry handler for /admin
+ * - Unauthenticated users land directly on /admin/login
+ * - Authenticated users land on /admin/dashboard
+ */
+const AdminRootRedirect: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+  return <Navigate to={isAuthenticated ? "/admin/dashboard" : "/admin/login"} replace />;
 };
 
 export function App() {
@@ -81,6 +95,30 @@ export function App() {
                   }
                 />
                 <Route
+                  path="/gifting"
+                  element={
+                    <CustomerLayout>
+                      <GiftingPage />
+                    </CustomerLayout>
+                  }
+                />
+                <Route
+                  path="/gifting/build-your-gift"
+                  element={
+                    <CustomerLayout>
+                      <BuildYourGiftPage />
+                    </CustomerLayout>
+                  }
+                />
+                <Route
+                  path="/gifting/:slug"
+                  element={
+                    <CustomerLayout>
+                      <GiftDetailPage />
+                    </CustomerLayout>
+                  }
+                />
+                <Route
                   path="/our-story"
                   element={
                     <CustomerLayout>
@@ -106,7 +144,7 @@ export function App() {
                 />
 
                 {/* ----------------- Admin Portal Routes ----------------- */}
-                <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+                <Route path="/admin" element={<AdminRootRedirect />} />
                 <Route path="/admin/login" element={<AdminLoginPage />} />
 
                 <Route
@@ -122,6 +160,14 @@ export function App() {
                   element={
                     <ProtectedAdminRoute>
                       <AdminMenuPage />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="/admin/gifting"
+                  element={
+                    <ProtectedAdminRoute>
+                      <AdminGiftingPage />
                     </ProtectedAdminRoute>
                   }
                 />
